@@ -6,6 +6,9 @@ with Ada.IO_Exceptions;
 package body Lexer.Base.Unicode is
    function Next (Object : in out Instance'Class) return Rune is
    begin
+      if Object.Buffer (Object.Pos) = Character'Val (4) then
+         return End_Of_Input;
+      end if;
       return Ret : Rune do
          Strings_Edit.UTF8.Get (Object.Buffer.all, Object.Pos, Ret);
       end return;

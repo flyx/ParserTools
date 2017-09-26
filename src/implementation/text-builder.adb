@@ -38,7 +38,7 @@ package body Text.Builder is
    begin
       New_H.Refcount := New_H.Refcount + 1;
       New_Buffer.Data (1 .. Natural (Object.Next - 1)) :=
-        Old.Data.all;
+        Old.Data (1 .. Natural (Object.Next - 1));
       Object.Buffer := New_Buffer.Data;
    end Grow;
 
