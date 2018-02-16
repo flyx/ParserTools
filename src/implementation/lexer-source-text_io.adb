@@ -5,21 +5,19 @@ package body Lexer.Source.Text_IO is
    procedure Read_Data (S : in out Instance; Buffer : out String;
                         Length : out Natural) is
    begin
-      Length := Buffer'First;
-      loop
-         Ada.Text_IO.Get_Line (S.File_Pointer.all,
-                               Buffer (Length .. Buffer'Last - 1), Length);
+      for I in Buffer'Range loop
          if Ada.Text_IO.End_Of_File (S.File_Pointer.all) then
-            Buffer (Length) := Character'Val (4);
-            exit;
+            Buffer (I) := Character'Val (4);
+            Length := I;
+            return;
+         elsif Ada.Text_IO.End_Of_Line (S.File_Pointer.all) then
+            Buffer (I) := Character'Val (10);
+            Ada.Text_IO.Skip_Line (S.File_Pointer.all);
+         else
+            Ada.Text_IO.Get (S.File_Pointer.all, Buffer (I));
          end if;
-         Ada.Text_IO.Get_Line (S.File_Pointer.all,
-                               Buffer (Length .. Buffer'Last), Length);
-         exit when Length = Buffer'Last;
-         Buffer (Length + 1) := Character'Val (10);
-         Length := Length + 2;
-         exit when Length > Buffer'Last;
       end loop;
+      Length := Buffer'Last;
    end Read_Data;
 
    function As_Source (File : Ada.Text_IO.File_Access) return Pointer is

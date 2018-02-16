@@ -4,11 +4,15 @@
 package body Text.Builder.Unicode is
    procedure Append (Object : in out Reference;
                      Value : Strings_Edit.UTF8.Code_Point) is
+      Buffer : String (1 .. 4);
+      Position : Positive := 1;
    begin
-      if Object.Next + 3 > --  maximum UTF-8 encoded character length is 4
-        System.Storage_Elements.Storage_Offset (Object.Buffer.all'Last) then
-         Grow (Object, 4);
-      end if;
-      Strings_Edit.UTF8.Put (Object.Buffer.all, Positive (Object.Next), Value);
+      Strings_Edit.UTF8.Put (Buffer, Position, Value);
+      Object.Append (Buffer (1 .. Position - 1));
+      --if Object.Next + 3 > --  maximum UTF-8 encoded character length is 4
+      --  System.Storage_Elements.Storage_Offset (Object.Buffer.all'Last) then
+      --   Grow (Object, 4);
+      --end if;
+      --Strings_Edit.UTF8.Put (Object.Buffer.all, Positive (Object.Next), Value);
    end Append;
 end Text.Builder.Unicode;
